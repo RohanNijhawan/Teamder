@@ -88,23 +88,47 @@ router.post('/removeuser', function (req,res) {
     var db = req.db;
     var collection = db.get('users');
     var currentuser = req.body.username;
-
+    collection.remove({"name": currentuser},{justOne: true},function(e,user){
+        if (e) {
+                res.send("Your name does not exist on the Database");
+            }
+            res.send("You have been successfully removed from the database. Have a Good Day!");
+    });
 });
 /*Handles addition of skills */
-router.post('/removeuser', function (req,res) {
+router.post('/addskills', function (req,res) {
     var db = req.db;
     var collection = db.get('users');
     var currentuser = req.body.username;
-    var skills = req.body.skills.split(/[\s,]+/);
-    var lookingFor = req.body.lookingFor.split(/[\s,]+/);
+    var skillsadd = req.body.skills.split(/[\s,]+/);
+    var lookingForadd = req.body.lookingFor.split(/[\s,]+/);
+    collection.findAndModify(
+   { "name": {$eq: currentuser} },
+   {$addToSet: {skills : skillsadd, lookingFor : lookingForadd}},
+   {upsert: false},function(e,works) {
+    if (e) {
+            res.send("Your skills already exist on the Database");
+            }
+            res.send("Your preferences have been successfully updated. Have a Good Day!");
+    });
 });
+
 /*Handles removal of skills */
-router.post('/removeuser', function (req,res) {
+router.post('/rmskills', function (req,res) {
     var db = req.db;
     var collection = db.get('users');
     var currentuser = req.body.username;
-    var skills = req.body.skills.split(/[\s,]+/);
-    var lookingFor = req.body.lookingFor.split(/[\s,]+/);
+    var skillsadd = req.body.skills.split(/[\s,]+/);
+    var lookingforadd = req.body.lookingFor.split(/[\s,]+/);
+    collection.findAndModify(
+   {"name": currentuser },
+   {$pull: {skills : {$in: skillsadd}, lookingFor :{$in: lookingforadd}}},
+   {multi: true},function(e,works){
+    if (e) {
+            res.send("Your skills do not exist on the Database");
+            }
+            res.send("Your preferences have been successfully updated. Have a Good Day!");
+    });
 });
 /* Handles the search user request. */
 router.post('/searchuser', function (req, res) {
