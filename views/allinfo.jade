@@ -1,0 +1,15 @@
+extends layout
+
+block content
+	h1.
+		User List
+	ul
+		each user, i in users
+			h3 #{user.name}, #{user.school}
+			p I'm good at:
+			for skill in user.skills
+				li #{skill}
+			p I want to work with people who know:
+			for looking in user.lookingFor
+				li #{looking}
+
