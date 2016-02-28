@@ -1,11 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Boo' });
-});
-
 /*GET all info
 for debugging only */
 router.get('/allinfo', function(req, res) {
@@ -15,6 +10,18 @@ router.get('/allinfo', function(req, res) {
         res.render('allinfo', {
             "users" : docs
 
+        });
+    });
+});
+
+/*GET all info, testing CSS
+for debugging only */
+router.get('/allinfopretty', function(req, res) {
+    var db = req.db;
+    var collection = db.get('users');
+    collection.find({},{},function(e,docs){
+        res.render('allinfopretty', {
+            "users" : docs
         });
     });
 });
