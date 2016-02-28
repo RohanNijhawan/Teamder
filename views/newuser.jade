@@ -8,3 +8,11 @@ block content
         input#inputUserSkills(type="text", placeholder="Skills", name="skills")
         input#inputUserLF(type="text", placeholder="Looking For", name="lookingFor")
         button#btnSubmit(type="submit") submit
+    form#removeuser(name="removeuser",method="post",action="/removeuser")
+    	input#inputUserName(type="text", placeholder="Name", name="name")
+    	button#btnSubmit(type="submit") submit
+    form#addskillsandlooking(name="addskills",method="post",action="/addskills")
+    	input#inputUserName(type="text", placeholder="Name", name="name")
+    	input#inputUserSkills(type="text", placeholder="Skills", name="skills")
+        input#inputUserLF(type="text", placeholder="Looking For", name="lookingFor")
+    	button#btnSubmit(type="submit") submit)	

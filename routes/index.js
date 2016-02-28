@@ -40,15 +40,9 @@ router.get('/currentuser', function(req, res) {
     collection.find({$text:{ $search: currentuser, $caseSensitive: false}},{},function(e,user){
         if (e) {
                 res.send("Your name does not exist on the Database. Please enter your fullname");
-<<<<<<< HEAD
-            } else {
-            var userdisp = user; 
-        }
-=======
             }
             console.log(user);
             userdisp = user; 
->>>>>>> origin/master
         });
 
     collection.find({},{},function(e,docs){
@@ -89,22 +83,33 @@ router.post('/adduser', function (req, res) {
 router.get('/finduser', function(req, res) {
     res.render('finduser', { title: 'Find your teammates' });
 });
+/*Handles removal of users */
+router.post('/removeuser', function (req,res) {
+    var db = req.db;
+    var collection = db.get('users');
+    var currentuser = req.body.username;
+
+});
+/*Handles addition of skills */
+router.post('/removeuser', function (req,res) {
+    var db = req.db;
+    var collection = db.get('users');
+    var currentuser = req.body.username;
+    var skills = req.body.skills.split(/[\s,]+/);
+    var lookingFor = req.body.lookingFor.split(/[\s,]+/);
+});
+/*Handles removal of skills */
+router.post('/removeuser', function (req,res) {
+    var db = req.db;
+    var collection = db.get('users');
+    var currentuser = req.body.username;
+    var skills = req.body.skills.split(/[\s,]+/);
+    var lookingFor = req.body.lookingFor.split(/[\s,]+/);
+});
 /* Handles the search user request. */
 router.post('/searchuser', function (req, res) {
     var db = req.db;
     var collection = db.get('users');
-<<<<<<< HEAD
-    var currentuser = req.username;
-    console.log(name);
-    collection.find({$text:{ $search: currentuser, $caseSensitive: false}},{},function(e,docs){
-        if (e) {
-                res.send("Your name does not exist on the Database. Please enter your fullname");
-            }
-            var userdisp = user; 
-        });
-
-    collection.find({},{},function(e,docs){
-=======
     var currentuser = req.body.username;
     var userdisp;
     collection.find({"name": currentuser},{},function(e,user){
@@ -116,15 +121,10 @@ router.post('/searchuser', function (req, res) {
 
     collection.find({},{},function(e,docs){
         console.log(userdisp);
->>>>>>> origin/master
         res.render('currentuser', {
             "users" : docs,
             "user" : userdisp
         });
-<<<<<<< HEAD
     }); 
-=======
-    });
->>>>>>> origin/master
 });
 module.exports = router;
