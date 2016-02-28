@@ -35,15 +35,18 @@ router.get('/newuser', function(req, res) {
 router.get('/currentuser', function(req, res) {
     var db = req.db;
     var collection = db.get('users');
-    var currentuser = req.username;
-    collection.find({$text:{ $search: currentuser, $caseSensitive: false}},{},function(e,docs){
+    var currentuser = req.body.username;
+    var userdisp;
+    collection.find({$text:{ $search: currentuser, $caseSensitive: false}},{},function(e,user){
         if (e) {
                 res.send("Your name does not exist on the Database. Please enter your fullname");
             }
-            var userdisp = user; 
-        };
+            console.log(user);
+            userdisp = user; 
+        });
 
     collection.find({},{},function(e,docs){
+        console.log(userdisp);
         res.render('currentuser', {
             "users" : docs,
             "user" : userdisp
@@ -56,8 +59,9 @@ router.post('/adduser', function (req, res) {
     var db = req.db;
     var name = req.body.name;
     var school = req.body.school;
-    var skills = req.body.skills.split(',');
-    var lookingFor = req.body.lookingFor.split(',');
+    var skills = req.body.skills.split(/[\s,]+/);
+
+    var lookingFor = req.body.lookingFor.split(/[\s,]+/);
 
     var collection = db.get('users');
 
@@ -82,8 +86,22 @@ router.get('/finduser', function(req, res) {
 /* Handles the search user request. */
 router.post('/searchuser', function (req, res) {
     var db = req.db;
-    var name = req.body.username;
     var collection = db.get('users');
-    res.redirect("currentuser");
+    var currentuser = req.body.username;
+    var userdisp;
+    collection.find({"name": currentuser},{},function(e,user){
+        if (e) {
+                res.send("Your name does not exist on the Database. Please enter your fullname");
+            }
+            userdisp = user; 
+        });
+
+    collection.find({},{},function(e,docs){
+        console.log(userdisp);
+        res.render('currentuser', {
+            "users" : docs,
+            "user" : userdisp
+        });
+    });
 });
 module.exports = router;
