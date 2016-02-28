@@ -39,9 +39,10 @@ router.get('/currentuser', function(req, res) {
     collection.find({$text:{ $search: currentuser, $caseSensitive: false}},{},function(e,docs){
         if (e) {
                 res.send("Your name does not exist on the Database. Please enter your fullname");
-            }
+            } else {
             var userdisp = user; 
-        };
+        }
+        });
 
     collection.find({},{},function(e,docs){
         res.render('currentuser', {
@@ -84,6 +85,20 @@ router.post('/searchuser', function (req, res) {
     var db = req.db;
     var name = req.body.username;
     var collection = db.get('users');
-    res.redirect("currentuser");
+    var currentuser = req.username;
+    console.log(name);
+    collection.find({$text:{ $search: currentuser, $caseSensitive: false}},{},function(e,docs){
+        if (e) {
+                res.send("Your name does not exist on the Database. Please enter your fullname");
+            }
+            var userdisp = user; 
+        });
+
+    collection.find({},{},function(e,docs){
+        res.render('currentuser', {
+            "users" : docs,
+            "user" : userdisp
+        });
+    }); 
 });
 module.exports = router;
