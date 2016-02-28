@@ -1,27 +1,26 @@
 extends layout
 
 block content
-	h1= title
-	script. (type='text/javascript')
-		var len = user.skill
-		len += user.lookingfor
-		for user2 in users
-		if (user.id != user2.id) {
-		for skill in user.skills
-			for looking in user2.skills
-				if (looking==skill) {
-					val.final += 1/len 
-				}
-			for looking2 in user.lookingFor
-			for skill2 in user2.lookingFor
-			if (looking2==skill2) {
-				val.final += 1/len 
-			} 	
-		}
-	h1 #{user}
-	ul
-	for skill in user.skills 
-		li #{skill}
-	ul 
-	for looking in user.lookingFor
-		li #{looking}
+	-var current= user[0]
+	h1 Welcome, #{current.name}
+	div(class="container")
+	for user in users
+		-if (!current._id.equals(user._id))
+			div(class="row")
+				img(class="img-circle col-md-2" src="http://www.openingthebook.com/media/427156/image-1_large_thumb.jpg")
+				-var mypercentage= 0
+				-var theirpercentage= 0
+				div(class="col-md-6")
+					h1 #{user.name}, #{user.school}
+					h4 Their matching skills:
+					for myskill in current.lookingFor
+						for theirskill in user.skills
+							if myskill==theirskill
+								h3= theirskill
+								-mypercentage+= 100/current.skills.length
+					for myskill in current.skills
+						for theirskill in user.lookingFor
+							if myskill==theirskill
+								-theirpercentage+= 100/user.lookingFor.length
+					h2 They're a #{mypercentage}% Match
+					h2 I'm a #{theirpercentage}% Match 
