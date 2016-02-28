@@ -37,8 +37,9 @@ router.get('/signup', function(req, res) {
 });
 
 /* GET New User page. */
-router.get('/newuser', function(req, res) {
-    res.render('newuser', { title: 'Add New User' });
+router.get('/userinfo', function(req, res) {
+    var db = req.db;
+    res.render('userinfo');
 });
 
 /* Displays the information pertaining to one of the users */
@@ -78,69 +79,69 @@ router.post('/adduser', function (req, res) {
     var email = req.body.email;
     //security? what's security...?
     var pass = req.body.password;
-    // var skills = req.body.skills.split(/[\s,]+/);
-    // var lookingFor = req.body.lookingFor.split(/[\s,]+/);
+    var skills = req.body.skills.split(/[\s,]+/);
+    var lookingFor = req.body.lookingFor.split(/[\s,]+/);
 
     var collection = db.get('users');
 
     collection.insert({
         "name": name,
         "school": "",
-        "skills": [],
-        "lookingFor": [],
+        "skills": skills,
+        "lookingFor": lookingFor,
         "email": email,
         "password": pass
     }, function (err, doc) {
         if (err) {
             res.send("There was a problem writing to the DB.");
         } else {
-            res.redirect("allinfo");
+            res.redirect("/login");
         }
     })
 });
 
-/*Finds the teammate compatability for one user */
-/* GET New User page. */
-router.get('/finduser', function(req, res) {
-    res.render('finduser', { title: 'Find your teammates' });
-});
+// /*Finds the teammate compatability for one user */
+// /* GET New User page. */
+// router.get('/finduser', function(req, res) {
+//     res.render('finduser', { title: 'Find your teammates' });
+// });
 
-/* Handles the search user request. */
-router.post('/searchuser', function (req, res) {
-    var db = req.db;
-    var collection = db.get('users');
-<<<<<<< HEAD
-    var currentuser = req.username;
-    console.log(name);
-    collection.find({$text:{ $search: currentuser, $caseSensitive: false}},{},function(e,docs){
-        if (e) {
-                res.send("Your name does not exist on the Database. Please enter your fullname");
-            }
-            var userdisp = user; 
-        });
+// /* Handles the search user request. */
+// router.post('/searchuser', function (req, res) {
+//     var db = req.db;
+//     var collection = db.get('users');
+// <<<<<<< HEAD
+//     var currentuser = req.username;
+//     console.log(name);
+//     collection.find({$text:{ $search: currentuser, $caseSensitive: false}},{},function(e,docs){
+//         if (e) {
+//                 res.send("Your name does not exist on the Database. Please enter your fullname");
+//             }
+//             var userdisp = user; 
+//         });
 
-    collection.find({},{},function(e,docs){
-=======
-    var currentuser = req.body.username;
-    var userdisp;
-    collection.find({"name": currentuser},{},function(e,user){
-        if (e) {
-                res.send("Your name does not exist on the Database. Please enter your fullname");
-            }
-            userdisp = user; 
-        });
+//     collection.find({},{},function(e,docs){
+// =======
+//     var currentuser = req.body.username;
+//     var userdisp;
+//     collection.find({"name": currentuser},{},function(e,user){
+//         if (e) {
+//                 res.send("Your name does not exist on the Database. Please enter your fullname");
+//             }
+//             userdisp = user; 
+//         });
 
-    collection.find({},{},function(e,docs){
-        console.log(userdisp);
->>>>>>> origin/master
-        res.render('currentuser', {
-            "users" : docs,
-            "user" : userdisp
-        });
-<<<<<<< HEAD
-    }); 
-=======
-    });
->>>>>>> origin/master
-});
+//     collection.find({},{},function(e,docs){
+//         console.log(userdisp);
+// >>>>>>> origin/master
+//         res.render('currentuser', {
+//             "users" : docs,
+//             "user" : userdisp
+//         });
+// <<<<<<< HEAD
+//     }); 
+// =======
+//     });
+// >>>>>>> origin/master
+// });
 module.exports = router;

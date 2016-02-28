@@ -3,7 +3,7 @@ extends layout
 block content
     h1= title
     form#formAddUser(name="adduser",method="post",action="/adduser")
-        input#inputUserName(type="text", placeholder="Name", name="name")
+        input#inputUserName(type="text", placeholder="Name", name="name", value="test")
         input#inputUserSchool(type="text", placeholder="College Name", name="school")
         input#inputUserSkills(type="text", placeholder="Skills", name="skills")
         input#inputUserLF(type="text", placeholder="Looking For", name="lookingFor")
