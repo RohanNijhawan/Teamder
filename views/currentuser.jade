@@ -1,7 +1,7 @@
 extends layout
 
 block content
-	-var current= user[0]
+	-var current= user
 	h1 Welcome, #{current.name}
 	div(class="container")
 	for user in users
