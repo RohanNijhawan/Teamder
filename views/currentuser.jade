@@ -1,0 +1,27 @@
+extends layout
+
+block content
+	h1= title
+	script. (type='text/javascript')
+		var len = user.skill
+		len += user.lookingfor
+		for user2 in users
+		if (user.id != user2.id) {
+		for skill in user.skills
+			for looking in user2.skills
+				if (looking==skill) {
+					val.final += 1/len 
+				}
+			for looking2 in user.lookingFor
+			for skill2 in user2.lookingFor
+			if (looking2==skill2) {
+				val.final += 1/len 
+			} 	
+		}
+	h1 #{user}
+	ul
+	for skill in user.skills 
+		li #{skill}
+	ul 
+	for looking in user.lookingFor
+		li #{looking}

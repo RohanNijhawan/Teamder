@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Boo' });
 });
 
 /*GET all info
@@ -14,6 +14,7 @@ router.get('/allinfo', function(req, res) {
     collection.find({},{},function(e,docs){
         res.render('allinfo', {
             "users" : docs
+
         });
     });
 });
@@ -23,10 +24,29 @@ router.get('/newuser', function(req, res) {
     res.render('newuser', { title: 'Add New User' });
 });
 
+/* Displays the information pertaining to one of the users */
+router.get('/currentuser', function(req, res) {
+    var db = req.db;
+    var collection = db.get('users');
+    var currentuser = req.username;
+    collection.find({$text:{ $search: currentuser, $caseSensitive: false}},{},function(e,docs){
+        if (e) {
+                res.send("Your name does not exist on the Database. Please enter your fullname");
+            }
+            var userdisp = user; 
+        };
+
+    collection.find({},{},function(e,docs){
+        res.render('currentuser', {
+            "users" : docs,
+            "user" : userdisp
+        });
+    }); 
+});
+
 /*POST new user info */
 router.post('/adduser', function (req, res) {
     var db = req.db;
-
     var name = req.body.name;
     var school = req.body.school;
     var skills = req.body.skills.split(',');
@@ -46,6 +66,17 @@ router.post('/adduser', function (req, res) {
             res.redirect("allinfo");
         }
     })
-})
-
+});
+/*Finds the teammate compatability for one user */
+/* GET New User page. */
+router.get('/finduser', function(req, res) {
+    res.render('finduser', { title: 'Find your teammates' });
+});
+/* Handles the search user request. */
+router.post('/searchuser', function (req, res) {
+    var db = req.db;
+    var name = req.body.username;
+    var collection = db.get('users');
+    res.redirect("currentuser");
+});
 module.exports = router;
