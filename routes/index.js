@@ -26,50 +26,70 @@ router.get('/allinfopretty', function(req, res) {
     });
 });
 
+/* GET login page. */
+router.get('/login', function(req, res) {
+    res.render('login');
+});
+
+/* GET signup page. */
+router.get('/signup', function(req, res) {
+    res.render('signup');
+});
+
 /* GET New User page. */
 router.get('/newuser', function(req, res) {
     res.render('newuser', { title: 'Add New User' });
 });
 
 /* Displays the information pertaining to one of the users */
-router.get('/currentuser', function(req, res) {
+router.post('/currentuser', function(req, res) {
     var db = req.db;
     var collection = db.get('users');
-    var currentuser = req.body.username;
+    console.log("login request from " + req.body.email + ", using password: " + req.body.password);
+    var currentuser = req.body.email;
+    var password = req.body.password;
     var userdisp;
-    collection.find({$text:{ $search: currentuser, $caseSensitive: false}},{},function(e,user){
-        if (e) {
-                res.send("Your name does not exist on the Database. Please enter your fullname");
-            }
-            console.log(user);
-            userdisp = user; 
-        });
-
-    collection.find({},{},function(e,docs){
-        console.log(userdisp);
-        res.render('currentuser', {
-            "users" : docs,
-            "user" : userdisp
-        });
-    }); 
+    collection.findOne({"email": currentuser},{},function(e,user){
+        if (e || user==null) {
+            console.log("made it");
+            res.redirect("/login", { error: "invalid email"});
+        } else {
+            console.log("entered password: " + password + " user password: " + user["password"]);
+            if (password===user["password"]) {
+                userdisp = user; 
+                collection.find({},{},function(e,docs){
+                    console.log(userdisp);
+                    res.render('currentuser', {
+                        "users" : docs,
+                        "user" : userdisp
+                    });
+                }); 
+            } else {
+                res.redirect("/login", { error: "invalid password"});
+            } 
+        }  
+    });   
 });
 
 /*POST new user info */
 router.post('/adduser', function (req, res) {
     var db = req.db;
     var name = req.body.name;
-    var school = req.body.school;
-    var skills = req.body.skills.split(/[\s,]+/);
-
-    var lookingFor = req.body.lookingFor.split(/[\s,]+/);
+    var email = req.body.email;
+    //security? what's security...?
+    var pass = req.body.password;
+    // var skills = req.body.skills.split(/[\s,]+/);
+    // var lookingFor = req.body.lookingFor.split(/[\s,]+/);
 
     var collection = db.get('users');
 
     collection.insert({
         "name": name,
-        "school": school,
-        "skills": skills,
-        "lookingFor": lookingFor
+        "school": "",
+        "skills": [],
+        "lookingFor": [],
+        "email": email,
+        "password": pass
     }, function (err, doc) {
         if (err) {
             res.send("There was a problem writing to the DB.");
@@ -78,13 +98,14 @@ router.post('/adduser', function (req, res) {
         }
     })
 });
+
 /*Finds the teammate compatability for one user */
 /* GET New User page. */
 router.get('/finduser', function(req, res) {
     res.render('finduser', { title: 'Find your teammates' });
 });
-/*Handles removal of users */
-router.post('/removeuser', function (req,res) {
+/* Handles the search user request. */
+router.post('/removeuser', function (req, res) {
     var db = req.db;
     var collection = db.get('users');
     var currentuser = req.body.username;

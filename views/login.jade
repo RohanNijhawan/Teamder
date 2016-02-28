@@ -1,0 +1,16 @@
+extends layout
+
+block content
+	div(class="col-md-offset-4 col-md-4")
+		p= error
+	form#formAddUser(name="login",method="post",action="/currentuser")
+		.form-group.col-md-offset-4.col-md-4
+			label(for='userEmail') email address
+			input#userEmail.form-control(name="email", type='email', placeholder='hacktech@caltech.edu')
+		.form-group.col-md-offset-4.col-md-4
+			label(for='userPass') password
+			input#userPass.form-control(name="password", type='password', placeholder='gitpumped')
+		.form-group.col-md-offset-4.col-md-1
+			button.btn.btn-default(type='submit') login
+		div(class="col-md-4")
+			a(href="/signup") sign up
